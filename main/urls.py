@@ -21,6 +21,8 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from rest_framework.routers import DefaultRouter
+from blogApp.views import BlogViewSet,CategoryViewSet,CommentViewSet,LikesViewSet,PostViewsViewSet
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -35,10 +37,12 @@ schema_view = get_schema_view(
     public=True,
     permission_classes=[permissions.AllowAny],
 )
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(' debug /', include('debug_toolbar.urls')),
     path("users/", include("authenticated.urls")),
+    path('api/', include("blogApp.urls")),
     # Url paths for swagger:
     path("swagger(<format>\.json|\.yaml)",
     schema_view.without_ui(cache_timeout=0), name="schema-json"),

@@ -5,13 +5,13 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
-
+        
 class BlogSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
+    category = CategorySerializer(read_only=True)
     user = serializers.PrimaryKeyRelatedField(read_only=True)
-    total_comments = serializers.SerializerMethodField()
-    total_likes = serializers.SerializerMethodField()
-    total_views = serializers.SerializerMethodField()
+    total_comments = serializers.SerializerMethodField(read_only=True)
+    total_likes = serializers.SerializerMethodField(read_only=True)
+    total_views = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Blog
@@ -24,7 +24,12 @@ class BlogSerializer(serializers.ModelSerializer):
         return obj.likes.count()
 
     def get_total_views(self, obj):
-        return obj.postviews.count()
+        return obj.views.count()
+    
+    def create(self, validated_data):
+        user = self.context['request'].user
+        validated_data['user'] = user
+        return super().create(validated_data)
 
 
 class UserBlogSerializer(serializers.ModelSerializer):
