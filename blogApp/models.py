@@ -14,7 +14,7 @@ class Blog(models.Model):
     )
     title = models.CharField(max_length=40, unique=True)
     content = models.TextField()
-    image = models.ImageField(upload_to='blogs/')
+    image = models.ImageField(upload_to='blogs/', null=True, blank=True)
     category = models.ForeignKey(Category, related_name='blogs', on_delete=models.CASCADE)
     publish_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='blogs', on_delete=models.CASCADE)
@@ -41,4 +41,5 @@ class Likes(models.Model):
 class PostViews(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='post_views', on_delete=models.CASCADE)
     blog = models.ForeignKey(Blog, related_name='views', on_delete=models.CASCADE)
+    views = models.IntegerField(default=0)
     timestamp = models.DateTimeField(auto_now_add=True)
